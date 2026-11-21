@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="zh-CN" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="./vendor/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "ShotSans";
+        src: url("./assets/NotoSansSC-VF.ttf") format("truetype");
+        font-weight: 100 900;
+        font-display: block;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #08090b; }
+      #root {
+        position: relative; width: 1920px; height: 1080px; overflow: hidden;
+        font-family: "ShotSans"; color: #f2f0e9; background: #08090b;
+      }
+      #grid {
+        position: absolute; inset: 0;
+        background-image:
+          linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+        background-size: 80px 80px;
+      }
+      #band {
+        position: absolute; left: -400px; top: 240px; width: 1500px; height: 340px;
+        background: linear-gradient(90deg, rgba(216,255,62,0) 0%, rgba(216,255,62,.06) 45%, rgba(216,255,62,0) 100%);
+        filter: blur(70px); transform: rotate(-9deg); pointer-events: none;
+      }
+      #vignette {
+        position: absolute; inset: 0; pointer-events: none;
+        background: radial-gradient(120% 90% at 50% 45%, rgba(0,0,0,0) 40%, rgba(0,0,0,.55) 100%);
+      }
+
+      .lab {
+        position: absolute; font-size: 17px; font-weight: 600; letter-spacing: .22em;
+        text-transform: uppercase; color: #8b9399;
+      }
+      .lab.on { color: #d8ff3e; }
+      .rule { position: absolute; height: 1px; background: rgba(255,255,255,.14); transform-origin: left center; }
+      .vrule { position: absolute; width: 1px; background: rgba(255,255,255,.14); }
+      .tick { position: absolute; width: 1px; height: 12px; background: rgba(255,255,255,.35); }
+
+      .mask { position: absolute; overflow: hidden; }
+      .mask > div { will-change: transform; }
+      .h1 { font-size: 132px; font-weight: 900; line-height: 1.02; letter-spacing: -.045em; }
+      .h2 { font-size: 76px; font-weight: 900; line-height: 1.08; letter-spacing: -.035em; }
+      .body { font-size: 26px; font-weight: 400; color: #8b9399; letter-spacing: .02em; }
+      .lime { color: #d8ff3e; }
+
+      .scene { position: absolute; inset: 0; }
+      .card {
+        position: absolute; background: #0e1014; border: 1px solid rgba(255,255,255,.12);
+        padding: 26px 28px;
+      }
+      .card .k { font-size: 15px; letter-spacing: .2em; color: #4a5056; text-transform: uppercase; }
+      .card .v { font-size: 34px; font-weight: 700; margin-top: 10px; }
+
+      #prog { position: absolute; left: 120px; top: 1012px; width: 1680px; height: 1px; background: rgba(255,255,255,.14); transform-origin: left center; }
+      #progfill { position: absolute; left: 120px; top: 1012px; width: 1680px; height: 1px; background: #d8ff3e; transform-origin: left center; transform: scaleX(0); }
+      #ticks { position: absolute; left: 120px; top: 1004px; width: 1680px; }
+      #pgnum { position: absolute; right: 120px; top: 1000px; font-size: 15px; letter-spacing: .2em; color: #4a5056; }
+      #brand { position: absolute; right: 120px; top: 96px; text-align: right; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-fps="30" data-start="0" data-duration="10" data-width="1920" data-height="1080">
+      <div id="grid"></div>
+      <div id="band"></div>
+      <div id="vignette"></div>
+
+      <!-- ================= S1 title ================= -->
+      <section class="scene" id="s1" style="opacity:0">
+        <div class="lab" style="left:120px; top:96px">AI BASICS · 01</div>
+        <div class="lab" style="left:120px; top:128px; opacity:.5">FOUNDATION · 10 SEC</div>
+        <div class="mask" style="left:112px; top:300px; width:1500px; height:150px"><div class="h1" id="t1">什么叫 AI 模型</div></div>
+        <div class="rule" id="r1" style="left:120px; top:492px; width:1680px"></div>
+        <div class="body" id="sub" style="position:absolute; left:120px; top:530px; width:900px; opacity:0">
+          不是程序，是一堆从数据里学出来的数字。
+        </div>
+        <div class="card" id="c1" style="left:1240px; top:300px; width:440px">
+          <div class="k">PARAMETERS</div><div class="v" id="n1">0B</div>
+          <div class="k" style="margin-top:22px">TRAINING TOKENS</div><div class="v" id="n2">0T</div>
+        </div>
+        <div class="lab" style="left:120px; top:940px; opacity:.45">SCROLL · 10.0S</div>
+      </section>
+
+      <!-- ================= S2 definition ================= -->
+      <section class="scene" id="s2" style="opacity:0">
+        <div class="lab on" style="left:120px; top:96px">01 / 定义</div>
+        <div class="lab" style="left:120px; top:128px; opacity:.45">WHAT A MODEL ACTUALLY IS</div>
+        <div class="mask" style="left:112px; top:250px; width:760px; height:96px"><div class="h2" id="d1">模型不是代码</div></div>
+        <div class="mask" style="left:112px; top:352px; width:760px; height:96px"><div class="h2" id="d2">是一堆<span class="lime">会调的数字</span></div></div>
+        <div class="body" id="d3" style="position:absolute; left:120px; top:492px; width:640px; opacity:0">
+          训练做的事，就是反复微调这些数字，让输出越来越接近答案。
+        </div>
+
+        <div class="card" id="k1" style="left:900px; top:390px; width:230px; height:150px">
+          <div class="k">INPUT</div><div class="v">数据</div>
+        </div>
+        <div class="card" id="k2" style="left:1180px; top:390px; width:230px; height:150px">
+          <div class="k">WEIGHTS</div><div class="v lime">w₁ … wₙ</div>
+        </div>
+        <div class="card" id="k3" style="left:1460px; top:390px; width:230px; height:150px">
+          <div class="k">OUTPUT</div><div class="v">预测</div>
+        </div>
+        <div class="rule" id="l1" style="left:1132px; top:465px; width:44px"></div>
+        <div class="rule" id="l2" style="left:1412px; top:465px; width:44px"></div>
+        <div class="lab" id="cap2" style="left:900px; top:580px; opacity:0">训练 = 看着答案，反复调 w</div>
+      </section>
+
+      <!-- ================= S3 scale ================= -->
+      <section class="scene" id="s3" style="opacity:0">
+        <div class="lab on" style="left:120px; top:96px">02 / 规模</div>
+        <div class="lab" style="left:120px; top:128px; opacity:.45">SCALE OF A MODERN MODEL</div>
+        <div class="mask" style="left:112px; top:240px; width:1200px; height:96px"><div class="h2" id="s3t">规模有多大</div></div>
+
+        <div class="lab" style="left:120px; top:420px">PARAMETERS</div>
+        <div class="h1" id="big1" style="position:absolute; left:112px; top:452px; font-size:190px; color:#f2f0e9">0</div>
+        <div class="h1" style="position:absolute; left:600px; top:452px; font-size:190px; color:#d8ff3e">B</div>
+        <div class="rule" id="bar1" style="left:120px; top:700px; width:700px; background:#d8ff3e; opacity:.9"></div>
+        <div class="lab" style="left:120px; top:724px; opacity:.5">1750 亿个参数</div>
+
+        <div class="lab" style="left:1000px; top:420px">TOKENS</div>
+        <div class="h1" id="big2" style="position:absolute; left:992px; top:452px; font-size:190px; color:#f2f0e9">0</div>
+        <div class="h1" style="position:absolute; left:1470px; top:452px; font-size:190px; color:#d8ff3e">T</div>
+        <div class="rule" id="bar2" style="left:1000px; top:700px; width:700px; background:rgba(242,240,233,.5)"></div>
+        <div class="lab" style="left:1000px; top:724px; opacity:.5">1.4 万亿个词元</div>
+
+        <div class="lab" style="left:120px; top:860px; opacity:.45">参考：GPT-3 量级</div>
+      </section>
+
+      <!-- ================= S4 essence ================= -->
+      <section class="scene" id="s4" style="opacity:0">
+        <div class="lab on" style="left:120px; top:96px">03 / 本质</div>
+        <div class="lab" style="left:120px; top:128px; opacity:.45">ONE SENTENCE, ONE JOB</div>
+
+        <div class="card m" id="m1" style="left:120px; top:300px; width:330px; height:170px">
+          <div class="k">STEP 01</div><div class="v">读数据</div>
+        </div>
+        <div class="card m" id="m2" style="left:530px; top:300px; width:330px; height:170px">
+          <div class="k">STEP 02</div><div class="v">调参数</div>
+        </div>
+        <div class="card m" id="m3" style="left:940px; top:300px; width:330px; height:170px">
+          <div class="k">STEP 03</div><div class="v">压误差</div>
+        </div>
+        <div class="card m" id="m4" style="left:1350px; top:300px; width:330px; height:170px">
+          <div class="k">STEP 04</div><div class="v">会预测</div>
+        </div>
+        <div class="rule" id="f1" style="left:452px; top:384px; width:76px; opacity:.5"></div>
+        <div class="rule" id="f2" style="left:862px; top:384px; width:76px; opacity:.5"></div>
+        <div class="rule" id="f3" style="left:1272px; top:384px; width:76px; opacity:.5"></div>
+
+        <div class="mask" style="left:112px; top:640px; width:1500px; height:120px"><div class="h2" id="e1">本质只有一句话</div></div>
+        <div class="mask" style="left:112px; top:760px; width:1500px; height:150px"><div class="h1" id="e2" style="font-size:118px">预测下一个词</div></div>
+        <div class="lab" style="right:120px; top:940px; opacity:.45">END · 01</div>
+      </section>
+
+      <!-- chrome -->
+      <div id="brand" class="lab">AI BASICS<br /><span style="opacity:.45">EXPLAINER</span></div>
+      <div id="ticks"></div>
+      <div id="prog"></div>
+      <div id="progfill"></div>
+      <div id="pgnum">01 / 04</div>
+
+      <audio id="mix" data-start="0" data-duration="10" data-track-index="0" data-volume="0.22" src="./assets/bed.wav"></audio>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+
+      // ambient
+      tl.to("#band", { x: 900, duration: 10, ease: "none" }, 0);
+      tl.fromTo("#progfill", { scaleX: 0 }, { scaleX: 1, duration: 10, ease: "none" }, 0);
+
+      // scene cuts
+      const scenes = ["#s1", "#s2", "#s3", "#s4"];
+      const cuts = [0, 2.2, 4.8, 7.2];
+      scenes.forEach((s, i) => tl.set(s, { opacity: 1 }, cuts[i]));
+      tl.set("#s1", { opacity: 0 }, 2.2);
+      tl.set("#s2", { opacity: 0 }, 4.8);
+      tl.set("#s3", { opacity: 0 }, 7.2);
+      tl.set("#pgnum", { textContent: "01 / 04" }, 0);
+      tl.set("#pgnum", { textContent: "02 / 04" }, 2.2);
+      tl.set("#pgnum", { textContent: "03 / 04" }, 4.8);
+      tl.set("#pgnum", { textContent: "04 / 04" }, 7.2);
+
+      // S1
+      tl.fromTo("#t1", { yPercent: 112 }, { yPercent: 0, duration: 0.75, ease: "power3.out" }, 0.18);
+      tl.fromTo("#r1", { scaleX: 0 }, { scaleX: 1, duration: 0.9, ease: "power2.out" }, 0.5);
+      tl.fromTo("#sub", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 0.85);
+      tl.fromTo("#c1", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.6, ease: "power3.out" }, 0.7);
+
+      // S2
+      tl.fromTo("#d1", { yPercent: 112 }, { yPercent: 0, duration: 0.55, ease: "power3.out" }, 2.35);
+      tl.fromTo("#d2", { yPercent: 112 }, { yPercent: 0, duration: 0.55, ease: "power3.out" }, 2.45);
+      tl.fromTo("#d3", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 2.7);
+      tl.fromTo("#k1", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" }, 2.55);
+      tl.fromTo("#k2", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" }, 2.7);
+      tl.fromTo("#k3", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" }, 2.85);
+      tl.fromTo("#l1", { scaleX: 0 }, { scaleX: 1, duration: 0.2, ease: "none" }, 3.2);
+      tl.fromTo("#l2", { scaleX: 0 }, { scaleX: 1, duration: 0.2, ease: "none" }, 3.32);
+      tl.fromTo("#cap2", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 3.5);
+
+      // S3
+      tl.fromTo("#s3t", { yPercent: 112 }, { yPercent: 0, duration: 0.55, ease: "power3.out" }, 4.95);
+      tl.fromTo("#bar1", { scaleX: 0 }, { scaleX: 1, duration: 0.8, ease: "power2.out" }, 5.15);
+      tl.fromTo("#bar2", { scaleX: 0 }, { scaleX: 1, duration: 0.8, ease: "power2.out" }, 5.3);
+
+      // S4
+      tl.fromTo(".m", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.09, ease: "power3.out" }, 7.35);
+      tl.fromTo("#f1", { scaleX: 0 }, { scaleX: 1, duration: 0.18, ease: "none" }, 7.75);
+      tl.fromTo("#f2", { scaleX: 0 }, { scaleX: 1, duration: 0.18, ease: "none" }, 7.93);
+      tl.fromTo("#f3", { scaleX: 0 }, { scaleX: 1, duration: 0.18, ease: "none" }, 8.11);
+      tl.fromTo("#e1", { yPercent: 112 }, { yPercent: 0, duration: 0.5, ease: "power3.out" }, 8.25);
+      tl.fromTo("#e2", { yPercent: 112 }, { yPercent: 0, duration: 0.6, ease: "power3.out" }, 8.4);
+
+      // numbers (discrete steps, deterministic)
+      function countUp(sel, to, start, dur, suffix) {
+        const steps = 16;
+        for (let i = 0; i <= steps; i++) {
+          const t = start + (dur * i) / steps;
+          const v = Math.round((to * i) / steps);
+          tl.set(sel, { textContent: v + suffix }, t);
+        }
+      }
+      countUp("#n1", 175, 0.75, 1.1, "B");
+      countUp("#n2", 14, 0.95, 1.1, "T");
+      countUp("#big1", 175, 5.0, 1.0, "");
+      countUp("#big2", 14, 5.15, 1.0, "");
+
+      // module highlight
+      ["#m1", "#m2", "#m3", "#m4"].forEach((m, i) => {
+        tl.to(m, { borderColor: "#d8ff3e", boxShadow: "0 0 34px rgba(216,255,62,.16)", duration: 0.18 }, 7.7 + i * 0.18);
+        tl.to(m, { borderColor: "rgba(255,255,255,.12)", boxShadow: "0 0 0 rgba(0,0,0,0)", duration: 0.3 }, 8.2 + i * 0.18);
+      });
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

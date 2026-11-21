@@ -1,0 +1,4 @@
+interface:
+  display_name: "暗黑科技讲解片"
+  short_description: "Create minimal dark technology explainer videos"
+  default_prompt: "用 $dark-tech-explainer 把我的内容做成暗黑科技风讲解视频。"
